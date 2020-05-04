@@ -1,6 +1,6 @@
 const express = require('express');
 const server = express();
-//server.use(express.json());
+server.use(express.json());
 
 let users = [
 	{
@@ -16,6 +16,12 @@ server.get('/', (req, res) => {
 	server.get('/api/users', function (req, res) {
 		res.json(users);
 	});
+});
+
+server.post('/api/users', function (req, res) {
+	const userInfo = req.body;
+
+	res.status(201).json(userInfo);
 });
 
 server.listen(8000, () => console.log('API Works'));
