@@ -21,21 +21,39 @@ let users = [
 	},
 ];
 
+//create new user
 server.post('/api/users', function (req, res) {
-	//create new user
 	const userInfo = req.body;
-	if (userInfo)
+	const newUser = {
+		id: shortid.generate(),
+		...userInfo,
+	};
+	if (newUser === undefined) {
 		res
-			.status(201)
-			.json({ message: 'The user with the specified ID does not exist.' });
+			.status(400)
+			.json({ errorMessage: 'Please provide name and bio for the user.' });
+	} else if (newUser.name === undefined) {
+		res.status(400).json({ message: 'please add name' });
+	} else if (newUser.bio === undefined) {
+		res.status(400).json({ message: 'please add bio' });
+	} else {
+		users.push(newUser);
+		res.status(201).json(newUser);
+	}
 });
+
+//Test Server - works
 server.get('/', (req, res) => {
 	res.json({ name: 'Mosae S Litsoane' });
 });
+//End of test
+
+//Get the list of users - done
 server.get('/api/users', function (req, res) {
 	res.json(users); //returns array users
 });
-//get users by id - Returns the user object with the specified id.
+
+//get users by id - Returns the user object with the specified id. - done
 server.get('/api/users/:id', (req, res) => {
 	const reqId = req.params.id;
 	const userReq = users.filter((user) => user.id === reqId); // filter to check for matching id
@@ -44,18 +62,8 @@ server.get('/api/users/:id', (req, res) => {
 		res
 			.status(404)
 			.json({ message: 'The user with the specified ID does not exist.' });
-	}
-});
-
-//DELETE
-server.delete('/api/user/:id', function (req, res) {
-	const id = req.params.id;
-	deleteUsers = users.find((users) => users.id == id);
-	if (deleteUsers) {
-		users = users.filter((user) => user.id != id);
-		res.status(200).json({ message: 'User deleted' });
 	} else {
-		res.status(500).json({ errorMessage: 'User cannot be deleted' });
+		res.status(200).json(userReq[0]);
 	}
 });
 
@@ -71,11 +79,9 @@ server.put('/api/user/:id, function', (req, res) => {
 				putUser.bio = req.body.bio;
 				res.status(200).json({ message: 'Success!' });
 			} catch (error) {
-				res
-					.status(500)
-					.json({
-						errorMessage: 'The user information could not be modified.',
-					});
+				res.status(500).json({
+					errorMessage: 'The user information could not be modified.',
+				});
 			}
 		} else {
 			res
@@ -89,4 +95,15 @@ server.put('/api/user/:id, function', (req, res) => {
 	}
 });
 
+//DELETE
+server.delete('/api/user/:id', function (req, res) {
+	const id = req.params.id;
+	deleteUsers = users.find((users) => users.id === id);
+	if (deleteUsers) {
+		users = users.filter((user) => user.id != id);
+		res.status(200).json({ message: 'User deleted' });
+	} else {
+		res.status(500).json({ errorMessage: 'User cannot be deleted' });
+	}
+});
 server.listen(8000, () => console.log('API Works'));
