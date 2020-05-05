@@ -21,6 +21,18 @@ let users = [
 	},
 ];
 
+//Test Server - works
+server.get('/', (req, res) => {
+	res.json({ name: 'Mosae S Litsoane' });
+});
+//End of test
+
+//Get the list of users - done
+server.get('/api/users', function (req, res) {
+	res.json(users); //returns array users
+});
+//--------------------------------------------//
+
 //create new user
 server.post('/api/users', function (req, res) {
 	const userInfo = req.body;
@@ -42,17 +54,6 @@ server.post('/api/users', function (req, res) {
 	}
 });
 
-//Test Server - works
-server.get('/', (req, res) => {
-	res.json({ name: 'Mosae S Litsoane' });
-});
-//End of test
-
-//Get the list of users - done
-server.get('/api/users', function (req, res) {
-	res.json(users); //returns array users
-});
-
 //get users by id - Returns the user object with the specified id. - done
 server.get('/api/users/:id', (req, res) => {
 	const reqId = req.params.id;
@@ -67,7 +68,7 @@ server.get('/api/users/:id', (req, res) => {
 	}
 });
 
-server.put('/api/user/:id, function', (req, res) => {
+server.put('/api/user/:id', (req, res) => {
 	//If the user with the specified id is not found:
 	const id = req.params.id;
 	const putUser = users.find((put) => put.id == id); //find the match between array id and url id
@@ -106,4 +107,5 @@ server.delete('/api/user/:id', function (req, res) {
 		res.status(500).json({ errorMessage: 'User cannot be deleted' });
 	}
 });
+
 server.listen(8000, () => console.log('API Works'));
