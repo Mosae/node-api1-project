@@ -68,34 +68,48 @@ server.get('/api/users/:id', (req, res) => {
 	}
 });
 
-server.put('/api/user/:id', (req, res) => {
-	//If the user with the specified id is not found:
-	const id = req.params.id;
-	const putUser = users.find((put) => put.id == id); //find the match between array id and url id
-	//if the match is 200
-	if (req.body.name && req.body.bio) {
-		if (putUser) {
-			try {
-				putUser.name = req.body.name;
-				putUser.bio = req.body.bio;
-				res.status(200).json({ message: 'Success!' });
-			} catch (error) {
-				res.status(500).json({
-					errorMessage: 'The user information could not be modified.',
-				});
-			}
-		} else {
-			res
-				.status(404)
-				.json({ message: 'The user with the specified ID does not exist.' });
-		}
-	} else {
-		res
-			.status(400)
-			.json({ errorMessage: 'Please provide name and bio for the user.' });
-	}
-});
+// server.put('/api/user/:id', (req, res) => {
+// 	//If the user with the specified id is not found:
+// 	const id = req.params.id;
+// 	const putUser = users.find((put) => put.id == id); //find the match between array id and url id
+// 	//if the match is 200
+// 	if (req.body.name && req.body.bio) {
+// 		if (putUser) {
+// 			try {
+// 				putUser.name = req.body.name;
+// 				putUser.bio = req.body.bio;
+// 				res.status(200).json({ message: 'Success!' });
+// 			} catch (error) {
+// 				res.status(500).json({
+// 					errorMessage: 'The user information could not be modified.',
+// 				});
+// 			}
+// 		} else {
+// 			res
+// 				.status(404)
+// 				.json({ message: 'The user with the specified ID does not exist.' });
+// 		}
+// 	} else {
+// 		res
+// 			.status(400)
+// 			.json({ errorMessage: 'Please provide name and bio for the user.' });
+// 	}
+// });
 
+server.patch('/api/user/:id', (req, res) => {
+	const id = req.params.id;
+	const user = users.find((user) => user.id === id);
+
+	if (!user) {
+		return res
+			.status(404)
+			.json({ message: 'The user with the specified ID does not exist.' });
+	}
+	if (req.body.name) user.name = req.body.name;
+
+	if (req.body.bio) user.bio = req.body.bio;
+	return res.status(200).json(user);
+});
 //DELETE
 server.delete('/api/user/:id', function (req, res) {
 	const id = req.params.id;
