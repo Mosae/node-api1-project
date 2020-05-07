@@ -121,5 +121,9 @@ server.delete('/api/user/:id', function (req, res) {
 		res.status(500).json({ errorMessage: 'User cannot be deleted' });
 	}
 });
+const port = process.env.PORT || 5002;
+server.listen(port, () => {
+	console.log(`\n*** Server Running on http://localhost:${port} ***\n`);
+});
 
-server.listen(8000, () => console.log('API Works'));
+//server.listen(8000, () => console.log('API Works'));
